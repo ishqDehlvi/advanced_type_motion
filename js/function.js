@@ -300,7 +300,8 @@ function collect(r,dir){
     .style('font-size',scale);
   });
 }//end of collect
-
+//test commit
+console.log('what');
 
 
 startUp();

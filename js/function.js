@@ -20,6 +20,7 @@ var movePass=false;
 var prevS=window.scrollY;
 var checkCont;
 var doneFreeze=0;
+var collectGo=false;
 var increment=200;
 var freezerec=0;
 var adjustH=false;
@@ -134,9 +135,8 @@ function collectAssign(){
   ruler.push({
     cond:function(r,dir){
       if(dir==true){
-        if(doneFreeze>4){return true}else{return 'derp'};
+        if(collectGo==true){return true}else{return 'derp'};
       }else{
-        console.log('whyyyyyyy');
         return true;
       };
     },
@@ -289,7 +289,12 @@ function freeze(r,d,s){
       .style('bottom',y+'px')
     }
   }//end of for loop
-  // if(doneFreeze)-note for fixing this, make it so this checks the counter and does a true-false
+  if(doneFreeze>4){
+    console.log('collectgo fired')
+    window.setTimeout(function(){collectGo=true},800);
+  }else{
+    collectGo=false;
+  }
 }//end of freeze
 function collect(r,dir){
   r.dist=window.scrollY;

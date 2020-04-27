@@ -22,6 +22,7 @@ var checkCont;
 var doneFreeze=0;
 var increment=200;
 var freezerec=0;
+var adjustH=false;
 function startUp(){
   window.scroll(0, 0);
   buildText();
@@ -156,6 +157,13 @@ function eventControl(event){
   var dir;
   var completed;
   var passed;
+  var container=d3.select('#contain');
+
+  if(adjustH==true){
+    var prevH=container.node().getBoundingClientRect().y;
+    var adjustment=prevH+(prevS-scrollV)*0.3;
+    container.style('top',adjustment+'px');
+  }
   if(scrollV>prevS){
     dir=true;
     completed=(f)=>{if(f==true){return true}else{return false}};
@@ -215,12 +223,14 @@ function fadeFinal(r,d){
     including=(x)=>{return !x.contains('show')};
     d3.selectAll('.word').filter(function(d, i, nodes){return including(nodes[i].classList)}).classed('fshow',true);
     d3.select('#contain')
-    .style('position','absolute')
-    .style('top',window.scrollY+50+'px');
+    adjustH=true;
+        // .style('top',50+'px');
+        // .style('position','absolute')
   }else{
     d3.select('#contain')
     .style('position','fixed')
     .style('top','50px')
+    adjustH=false;
     d3.selectAll('.fshow').classed('fshow',false)
   }
 
@@ -279,7 +289,7 @@ function freeze(r,d,s){
       .style('bottom',y+'px')
     }
   }//end of for loop
-  // if(doneFreeze)
+  // if(doneFreeze)-note for fixing this, make it so this checks the counter and does a true-false
 }//end of freeze
 function collect(r,dir){
   r.dist=window.scrollY;
@@ -301,7 +311,7 @@ function collect(r,dir){
   });
 }//end of collect
 //test commit
-console.log('what');
+
 
 
 startUp();

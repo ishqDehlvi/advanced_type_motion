@@ -13,17 +13,20 @@ var secstring=['t','h','e','s','e','c','r','e','t'];
 var secret=false;
 var secCount=0;
 var contain=d3.select('#contain');
-var length=window.innerHeight;
+var length=20;
 var ruler=[];
+var la=0;
 var started=false;
 var movePass=false;
 var prevS=window.scrollY;
 var checkCont;
 var doneFreeze=0;
 var collectGo=false;
-var increment=200;
+var increment=100;
 var freezerec=0;
+var fadePassed=false;
 var adjustH=false;
+var formerPos=[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}];
 function startUp(){
   window.scroll(0, 0);
   buildText();
@@ -31,7 +34,6 @@ function startUp(){
   freezeAssign();
   collectAssign();
   started=true;
-  console.log(ruler);
 }
 function buildText(){
   for(var x=0;x<excerpt.length;x++){
@@ -75,7 +77,7 @@ function buildText(){
   }//end of x for
   secstring.forEach((item, i) => {
     d3.select('body')
-      .append('span')
+      .append('div')
       .attr('class','special secr'+i)
       .html(item);
     d3.select('#head')
@@ -86,7 +88,7 @@ function buildText(){
   d3.select('.static2').append('text').html(' ');
 }
 function fadeAssign(){
-  var vpHeight=window.innerWidth;
+  var vpHeight=window.innerHeight;
   var words=document.querySelectorAll('.word');
   var wordsA=[]
   for(var y=0; y<words.length;y++){
@@ -100,10 +102,13 @@ function fadeAssign(){
     if(distance<vpHeight){
       c.classList.add("iv");
       ruler.push({type:0,node:c,dist:length,cond:function(){return true},f:false});
-      d3.select('#ruler').append('div').classed('type0',true);
       length=length+increment;
+      d3.select('#ruler').append('div').classed('type0',true);
+    }else{
+      // console.log(d3.select(c).text(),distance,vpHeight);
     }
   }//end of i loop
+  length+=400;
   checkCont=(x)=>{var check=(document.querySelector('#contain').getBoundingClientRect().y<51); return check;}
   ruler.push({type:1,node:0,dist:length,cond:function(){return true},f:false});
   d3.select('#ruler').append('div').classed('type0',true);
@@ -118,7 +123,7 @@ function freezeAssign(){
         if(dir==true){
           if(r.cnt*fraction>r.node.getBoundingClientRect().y){return true}else{return false};
         }else{
-            if(r.cnt*fraction<r.node.getBoundingClientRect().y){return true}else{return false};
+            if(r.cnt*fraction<r.node.getBoundingClientRect().y||fadePassed==false){return true}else{return false};
         };
       },
       type:2,
@@ -219,21 +224,19 @@ function fadeFinal(r,d){
   freezerec=window.scrollY-500;
   var type2=ruler.filter(el=>el.type==2)
   if(d==true){
+    fadePassed=true;
     movePass=true;
     including=(x)=>{return !x.contains('show')};
     d3.selectAll('.word').filter(function(d, i, nodes){return including(nodes[i].classList)}).classed('fshow',true);
     d3.select('#contain')
     adjustH=true;
-        // .style('top',50+'px');
-        // .style('position','absolute')
   }else{
+    fadePassed=false;
     d3.select('#contain')
-    .style('position','fixed')
     .style('top','50px')
     adjustH=false;
     d3.selectAll('.fshow').classed('fshow',false)
   }
-
   type2[0].cond=function(r,dir){
     if(dir==true){
       if(movePass==true){
@@ -289,31 +292,63 @@ function freeze(r,d,s){
       .style('bottom',y+'px')
     }
   }//end of for loop
+  var firstCnt=ruler.filter(el=>el.type==2)[0]
+  if (d==true &&firstCnt.f==false&&r.cnt==2){
+    freeze(firstCnt,true,ruler[ruler.indexOf(firstCnt)-1].dist);
+    firstCnt.f=true;
+  }else{
+  }
   if(doneFreeze>4){
-    console.log('collectgo fired')
     window.setTimeout(function(){collectGo=true},800);
   }else{
     collectGo=false;
   }
 }//end of freeze
 function collect(r,dir){
-  r.dist=window.scrollY;
+  if(la==0){
+    r.dist=window.scrollY-100;
+    la++;
+  }
   var goto='.static';
   var scale=window.getComputedStyle(document.querySelector('#head')).fontSize;
-  if(dir==true){
-  }else{
-    console.log('fired');
-    goto='.sec';
-    scale=window.getComputedStyle(document.querySelector('.secret')).fontSize;
-  }
+  var wordO=1;
+  var letO=0;
   document.querySelectorAll('.special').forEach((item, i) => {
-    var tops=document.querySelector(goto+i).getBoundingClientRect().y;
-    var lefts=document.querySelector(goto+i).getBoundingClientRect().x;
+    if(dir==true){
+      var tops=document.querySelector(goto+i).getBoundingClientRect().y;
+      var lefts=document.querySelector(goto+i).getBoundingClientRect().x;
+    }else{
+      var tops=formerPos[i].y;
+      var lefts=formerPos[i].x;
+      wordO=0;
+      letO=1;
+      scale=window.getComputedStyle(document.querySelector('.secret')).fontSize;
+
+    }
+    formerPos[i].x=document.querySelector('.secr'+i).getBoundingClientRect().x;
+    formerPos[i].y=document.querySelector('.secr'+i).getBoundingClientRect().y;
     d3.select('.secr'+i)
     .style('top',tops+'px')
     .style('left',lefts+'px')
     .style('font-size',scale);
   });
+  if(dir==true){
+    setTimeout(function(){
+      var collecter=ruler.filter(el=>el.type==3)[0]
+      if(collecter.f==true){
+        d3.selectAll('.special')
+        .style('opacity',letO)
+        d3.select('#head')
+        .style('color','rgba(255,255,255,'+wordO+')')
+      }
+    },700);
+  }else{
+    d3.selectAll('.special')
+    .style('opacity',letO)
+    d3.select('#head')
+    .style('color','rgba(255,255,255,'+wordO+')')
+  }
+
 }//end of collect
 //test commit
 

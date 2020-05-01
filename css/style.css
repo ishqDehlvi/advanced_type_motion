@@ -6,11 +6,120 @@ html,body{
   padding: 0px;
 }
 
+#frags{
+  width:min(80vw, 500px);
+  height:min(80vw, 500px);
+  position:fixed;
+  top:calc(50% - min(40vw,250px));
+  left:calc(50% - min(40vw,250px));
+  transform:translateY(100vh);
+  transition:transform,1s;
+  z-index:1000;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+#frags img{
+  width:100%;
+  position:absolute;
+  transition:transform 0.8s;
+  z-index:100;
+}
+
+.cap{
+  font-family: 'Space Mono', monospace;
+  font-size: 22px;
+  line-height: 30px;
+  color:rgba(255, 255, 255, 0);
+  transition: color 0.3s;
+}
+.menu-item{
+  font-family: 'Krona One', serif;
+  font-size: min(5vw,50px);
+  font-weight: 300;
+  line-height: min(7vw,60px);
+  color:rgba(255, 255, 255, 1);
+  transition: color 0.3s,opacity 0.3s,font-size 0.3s;
+  display:inline-block;
+  width:100%;
+  opacity:0;
+}
+.menu-item::before{
+  content:'+';
+}
+
+#lefcap,#rigcap{
+  position:absolute;
+  top:-70px;
+  width:160px;
+}
+#mencap{
+  position:absolute;
+  top:calc(100% + 30px);
+  width:100%;
+  text-align: center;
+  z-index:200;
+}
+
+#lefcap{
+  left:0;
+}
+#rigcap{
+  right:0;
+  width:140px;
+}
+#mencap .merch{
+  color:rgba(255,255,255,0);
+}
+#mencap .tix{
+  color:rgba(255,255,255,0);
+}
+
+
 #ruler{
   position:absolute;
   top:0;
+  height:7000px;
   width:100vw;
   padding-top:100vh;
+  overflow:hidden;
+}
+
+.bar{
+  height:100vh;
+  width:10%;
+  position:fixed;
+  text-align: center;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.bar span{
+  white-space: nowrap;
+  width:50vh;
+  display: block;
+  font-size: min(5vw,50px) !important;
+}
+.leftbar{
+  left:0;
+}
+.leftbar span{
+  transform:rotate(-90deg);
+  white-space: nowrap;
+}
+.merch,.tix{
+  color:rgba(255,255,255,1);
+  transform-origin: center;
+  text-align: center;
+}
+.rightbar{
+  right:0;
+}
+.rightbar span{
+  transform:rotate(90deg);
+  white-space: nowrap;
 }
 
 .startdist{
@@ -34,7 +143,32 @@ html,body{
   top:50px;
   transform:translateY(var(--translation));
 }
-
+.box{
+  position:absolute;
+  top:0;
+  width:100%;
+  height:100%;
+  /* border:1px solid white; */
+  opacity:0;
+  transition:opacity 0.3s;
+  z-index:50;
+  box-sizing: border-box;
+}
+#merchbox{
+  width:100vw;
+}
+#infobox{
+  padding-top:10px;
+}
+.krona{
+  font-family: 'Krona One', monospace;
+}
+.bodytext{
+  font-family: 'Space Mono', monospace;
+  font-size: 24px;
+  line-height: 30px;
+  color:rgba(255, 255, 255, 1);
+}
 #contain span{
   font-family: Krona One, serif;
   font-size:70px;
@@ -68,11 +202,18 @@ html,body{
   margin-top:calc(50vh - 40px);
   color:rgba(255,255,255,0);
   -webkit-backface-visibility: hidden;
+  transition:margin 0.5s;
 }
 #head span{
   display:inline-block;
   white-space: pre;
+  transition:transform 0.8s;
 }
+.selected::before{
+  content:"✕"!important;
+}
+
+
 .word{
   color:rgba(255,255,255,0);
   transition:color 0.5s;
@@ -91,15 +232,66 @@ html,body{
 #contain .fshow{
   color:rgba(255,255,255,1);
 }
+@media(hover:hover){
+  .menu-item{
+    cursor:pointer;
+  }
+}
+@media(max-width:900px){
+  .menu-item{
+    font-size: 30px;
+    line-height:36px;
+  }
+  #mencap{
+    top:calc(100% + 10px);
+  }
+  #mencap .merch{
+    color:rgba(255,255,255,1);
+  }
+  #mencap .tix{
+    color:rgba(255,255,255,1);
+  }
+  .merch , .tix{
+    color:rgba(255,255,255,0);
+  }
+  #frags{
+    top:calc(45% - min(40vw,250px));
+  }
+  .cap{
+    font-size: 18px;
+    line-height: 24px;
+  }
+  #lefcap,#rigcap{
+    position:absolute;
+    top:-55px;
+    width:140px;
+  }
+  #rigcap{
+    width:111px;
+  }
+}/*end of 900 media query */
 
 
 @media (max-width:700px){
+  #head{
+    margin-top:calc(45vh - 40px);
+  }
+  .menu-item{
+    line-height:40px;
+  }
+  #mencap{
+    top:calc(100% + 50px);
+  }
+
   #contain span{
     font-size:30px;
     line-height: 40px;
   }
   .special{
     font-size:30px;
+  }
+  #mencap{
+    top:calc(100% + 10px);
   }
 
 }

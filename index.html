@@ -8,10 +8,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
     <script>history.scrollRestoration = "manual"</script>
   </head>
-  <body>
+  <body class='noselect'>
     <div id='ruler'></div>
     <div id='contain' class='noselect'></div>
     <div id='head'></div>
+    <div id='frags'>
+      <div class='cap' id='lefcap'>march 2021:<br>KING LEAR</div>
+      <div class='cap' id='rigcap'>director:<br>WILL SHAKE</div>
+      <img id='f1' src='assets/frag1.png'>
+      <img id='f2' src='assets/frag2.png'>
+      <img id='f3' src='assets/frag3.png'>
+      <img id='f4' src='assets/frag4.png'>
+      <img id='f5' src='assets/frag5.png'>
+      <div id='mencap'>
+        <span class='menu-item info'>info</span>
+        <span class='menu-item tix'>tickets</span>
+        <span class='menu-item merch'>merch</span>
+      </div>
+      <div class='box cap' id='infobox'>
+        Introducing <span class='krona'>the secret:</span> <br>An exclusive, immersive 1 hour theatre experience performing three times each month to max audiences of 30 people per show. After each month the performance is completely changed, with a new production, cast, venue, and set.
+      </div>
+      <div class='box' id='ticketsbox'></div>
+      <div class='box' id='merchbox'></div>
+    </div>
+    <div class='bar leftbar'>
+      <span class='menu-item tix'>tickets</span>
+    </div>
+    <div class='bar rightbar'>
+      <span class='menu-item merch'>merch</span>
+    </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>

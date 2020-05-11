@@ -18,6 +18,7 @@ var ruler=[];
 var la=0;
 var countdowner;
 var auto;
+var firstTime=true;
 var started=false;
 var movePass=false;
 var prevS=window.scrollY;
@@ -193,6 +194,14 @@ function autoScroll(){
 function scrolling(event){
   if (started==true){
     eventControl(event);
+  }
+  if(firstTime==true){
+    d3.select('#progbar')
+    .classed('starting',false)
+    .classed('gobar',true)
+    .html('').append('span').classed('countdown',true)
+    timedStart(3000)
+    firstTime=false;
   }
 }
 
@@ -562,14 +571,18 @@ function timedStart(mil){
   timeout=true;
   timeCount=mil
   clearInterval(countdowner)
+
   d3.select('.countdown').html(' '+timeCount/1000);
+
   timeCount=timeCount-1000;
   countdowner=window.setInterval(function(){
       d3.select('.countdown').html(' '+timeCount/1000)
       timeCount=timeCount-1000;
     if(timeCount<0){
-      console.log('cleared')
       clearInterval(countdowner)
+      if(firstTime==true){
+        firstTime=false;
+      }
       d3.select('#progbar')
       .classed('starting',false)
       .classed('gobar',true)
@@ -595,6 +608,9 @@ window.addEventListener("wheel",function(event){
   timedStart(3000);
 });
 window.addEventListener("touchstart",function(event){
+  timedStart(3000);
+});
+window.addEventListener("touchmove",function(event){
   timedStart(3000);
 });
 window.addEventListener("resize",function(event){disperse(false); scrolling(event);});

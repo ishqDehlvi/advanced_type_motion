@@ -202,10 +202,6 @@ function eventControl(event){
   var completed;
   var passed;
   var container=d3.select('#contain');
-  if(!(window.matchMedia('hover').matches)&&Math.abs(scrollV-prevS)>8){
-    timedStart(mil)
-  }
-
   if(adjustH==true){
     var prevH=container.node().getBoundingClientRect().y;
     var adjustment=prevH+(prevS-scrollV)*0.3;
@@ -596,6 +592,9 @@ d3.selectAll('.menu-item').on('click',function(event){
 startUp();
 window.addEventListener("scroll",function(event){scrolling(event)});
 window.addEventListener("wheel",function(event){
+  timedStart(3000);
+});
+window.addEventListener("touchstart",function(event){
   timedStart(3000);
 });
 window.addEventListener("resize",function(event){disperse(false); scrolling(event);});

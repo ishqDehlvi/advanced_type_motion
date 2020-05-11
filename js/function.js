@@ -16,6 +16,8 @@ var contain=d3.select('#contain');
 var length=20;
 var ruler=[];
 var la=0;
+var countdowner;
+var auto;
 var started=false;
 var movePass=false;
 var prevS=window.scrollY;
@@ -25,8 +27,11 @@ var collectGo=false;
 var increment=80;
 var freezerec=0;
 var fadePassed=false;
+var timeout=false;
+var timeCount=0;
 var adjustH=false;
 var formerPos=[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}];
+var theatre=[{name:'THE TEMPEST',color:'#26408d',key:'tempest',date:'april 2021',director:'STEVE SPIEL'},{name:"MIDSUMMER NIGHT'S DREAM",color:'#2d5530',key:'midsummer',date:'may 2021',director:'SAM BECK'},{name:'KING LEAR',color:'#D31F39',key:'lear',date:'march 2021',director:'WILL SHAKE'}];
 function startUp(){
   window.scroll(0, 0);
   buildText();
@@ -34,8 +39,12 @@ function startUp(){
   freezeAssign();
   collectAssign();
   imgAssign();
+  merchItem();
   started=true;
+  timedStart(3000);
+  autoScroll();
 }
+
 function buildText(){
   for(var x=0;x<excerpt.length;x++){
     //for every line
@@ -167,6 +176,19 @@ function imgAssign(){
     f:false,
   })
 }
+
+function autoScroll(){
+    auto=setInterval(function(){
+      if(started==true&&timeout==false){
+        window.scrollTo({
+          top: window.scrollY+8,
+          left: 0,
+        });
+      }
+    },10)
+}
+
+
 
 function scrolling(event){
   if (started==true){
@@ -393,19 +415,22 @@ function dockLoad(dock){
   if(dock==true){
     var show='none';
     var color=1;
+    clearInterval(auto);
   }else{
     var show='block';
     started=true;
     var color=0;
+    autoScroll();
   }
   d3.selectAll('.cap').style('color','rgba(255,255,255,'+color+')')
   d3.selectAll('.menu-item').style('opacity',color)
+  d3.selectAll('.gobar').style('opacity',inv(color))
   // d3.select('#ruler').style('display',show);
   // d3.select('#contain').style('display',show);
 }
 function disperse(val){
   if(val==true){
-    document.querySelectorAll('#frags img').forEach((item, i) => {
+    document.querySelectorAll('.frag').forEach((item, i) => {
       var quadrant=0;
       if(window.innerWidth>window.innerHeight){
         var distance=window.innerHeight;
@@ -454,7 +479,8 @@ function disperse(val){
       d3.select(item).style('transform',`translate(${x+'px,'+y+'px'})`)
     });
   }else{
-    document.querySelectorAll('#frags img').forEach((item, i) => {
+
+    document.querySelectorAll('.frag').forEach((item, i) => {
       d3.select(item).style('transform','translate(0,0)')
     });
     document.querySelectorAll('#head span').forEach((item, i) => {
@@ -463,24 +489,102 @@ function disperse(val){
     d3.selectAll('.selected').classed('selected',false);
     d3.selectAll('.box').style('opacity',0);
   }
-
-
+  changePlay(2);
 }
 function menuItem(cNode){
   if(cNode.classed('selected')){
     var newVal=false;
     var see=0;
+    var pEvents='inherit';
   }else{
     var newVal=true;
     var see=1;
+    var pEvents='none';
   }
+  d3.selectAll('.frag').style('pointer-events',pEvents);
   d3.selectAll('.selected').classed('selected',false);
   d3.selectAll('.box').style('opacity',0);
   cNode.classed('selected',newVal);
   d3.select('#'+cNode.html()+'box').style('opacity',see);
   disperse(newVal);
 }
-
+function merchItem(){
+  theatre.forEach((item, x) => {
+    for(var i=4; i>0;i--){
+      var check=true;
+      if(x==2){
+        check=false;
+      }
+      d3.select('#merchbox')
+      .append('div')
+      .classed('merch'+x,true)
+      .classed('merchslide',true)
+      .classed('disappear',check)
+      .datum([x,i])
+      .append('img')
+      .style('transform',`rotate(${-30+Math.random()*60}deg)`)
+      .attr('src','assets/web'+item.key+i+'.jpg')
+      .on('click',function(event){
+        var slide=d3.select(d3.event.currentTarget.parentNode);
+        var stor=slide.datum()
+        slide.classed('disappear',true);
+        if(stor[1]==4){
+          var num=stor[0]+1;
+          if(num>2){
+            num=0;
+          }
+          changePlay(num);
+        }
+      })
+    }
+  });
+}
+function changePlay(index){
+  relPlay=theatre[index];
+  d3.selectAll('.merchslide').classed('disappear',true);
+  d3.selectAll('.merch'+index).classed('disappear',false);
+  d3.select('#lefcap').html(`${relPlay.date}:<br>${relPlay.name}`)
+  d3.select('#rigcap').html(`director:<br>${relPlay.director}`)
+  d3.select('body').style('background-color',relPlay.color);
+  if(index!==2){
+    d3.selectAll('.frag').style('opacity',0);
+  }else{
+    d3.selectAll('.frag').style('opacity',1);
+  }
+}
+function inv(val){
+  if(val==0){
+    return 1;
+  }else{
+    return 0;
+  }
+}
+function timedStart(mil){
+  timeout=true;
+  timeCount=mil
+  clearInterval(countdowner)
+  d3.select('.countdown').html(' '+timeCount/1000);
+  timeCount=timeCount-1000;
+  countdowner=window.setInterval(function(){
+      d3.select('.countdown').html(' '+timeCount/1000)
+      timeCount=timeCount-1000;
+    if(timeCount<0){
+      console.log('cleared')
+      clearInterval(countdowner)
+      d3.select('#progbar')
+      .classed('starting',false)
+      .classed('gobar',true)
+      .html('').append('span').classed('countdown',true)
+      d3.select('.countdown').html(' >');
+      // .style('opacity',0);
+      timeout=false;
+    };
+  },1000);
+  // setTimeout(function(){
+  //   timeout=false;
+  // },mil);
+}
+//∧∨
 
 d3.selectAll('.menu-item').on('click',function(event){
   menuItem(d3.select(d3.event.currentTarget));
@@ -488,4 +592,7 @@ d3.selectAll('.menu-item').on('click',function(event){
 
 startUp();
 window.addEventListener("scroll",function(event){scrolling(event)});
+window.addEventListener("wheel",function(event){
+  timedStart(3000);
+});
 window.addEventListener("resize",function(event){disperse(false); scrolling(event);});

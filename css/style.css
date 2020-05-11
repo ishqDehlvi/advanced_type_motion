@@ -1,9 +1,13 @@
 html,body{
   width:100vw;
-  background-color: #D31F39;
   overflow-x: hidden;
   margin: 0px;
   padding: 0px;
+}
+
+body{
+  background-color: #D31F39;
+  transition:background-color 0.3s;
 }
 
 #frags{
@@ -19,11 +23,12 @@ html,body{
   flex-direction: column;
   align-items: center;
 }
-#frags img{
+.frag{
   width:100%;
   position:absolute;
-  transition:transform 0.8s;
+  transition:transform 0.8s,opacity 0.3s;
   z-index:100;
+  pointer-events:inherit;
 }
 
 .cap{
@@ -51,7 +56,6 @@ html,body{
 #lefcap,#rigcap{
   position:absolute;
   top:-70px;
-  width:160px;
 }
 #mencap{
   position:absolute;
@@ -66,13 +70,14 @@ html,body{
 }
 #rigcap{
   right:0;
-  width:140px;
 }
 #mencap .merch{
   color:rgba(255,255,255,0);
+  pointer-events: none;
 }
 #mencap .tix{
   color:rgba(255,255,255,0);
+  pointer-events: none;
 }
 
 
@@ -155,8 +160,29 @@ html,body{
   box-sizing: border-box;
 }
 #merchbox{
-  width:100vw;
+  /* width:100vw; */
 }
+.merchslide{
+  position:absolute;
+  display:flex;
+  width:100%;
+  height:100%;
+  z-index: 100;
+  transition: opacity 0.3s;
+}
+.merchslide img{
+  height:100%;
+  margin:auto;
+  box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.2);
+
+  cursor:pointer;
+}
+.disappear{
+  opacity:0;
+  pointer-events: none;
+}
+
+
 #infobox{
   padding-top:10px;
 }
@@ -204,6 +230,45 @@ html,body{
   -webkit-backface-visibility: hidden;
   transition:margin 0.5s;
 }
+#progbar{
+  display:flex;
+  position:fixed;
+  white-space: nowrap;
+  height:50px;
+  transition-property:transform,top,right;
+  transition-duration: 0.3s;
+}
+.starting{
+  top:50%;
+  right:50%;
+  animation: blink 1s linear infinite;
+  text-align: center;
+  transform:translate(50%,-50%);
+}
+.gobar{
+  opacity:1;
+  top:0;
+  right:0;
+  text-align: right;
+  line-height: 50px !important;
+  padding-right: 10px;
+  animation:none;
+  box-sizing: border-box;
+}
+.progtext{
+  font-family: 'Space Mono', monospace;
+  font-size: 22px;
+  color:rgba(255, 255, 255, 1);
+  line-height: 30px;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+
+
 #head span{
   display:inline-block;
   white-space: pre;
@@ -247,9 +312,12 @@ html,body{
   }
   #mencap .merch{
     color:rgba(255,255,255,1);
+    pointer-events: all;
+
   }
   #mencap .tix{
     color:rgba(255,255,255,1);
+    pointer-events: all;
   }
   .merch , .tix{
     color:rgba(255,255,255,0);
@@ -261,13 +329,13 @@ html,body{
     font-size: 18px;
     line-height: 24px;
   }
+  .progtext{
+    font-size: 22px;
+    line-height: 24px;
+  }
   #lefcap,#rigcap{
     position:absolute;
     top:-55px;
-    width:140px;
-  }
-  #rigcap{
-    width:111px;
   }
 }/*end of 900 media query */
 

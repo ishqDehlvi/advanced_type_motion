@@ -30,6 +30,7 @@ var freezerec=0;
 var fadePassed=false;
 var timeout=false;
 var timeCount=0;
+var yourName=''
 var adjustH=false;
 var formerPos=[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}];
 var theatre=[{name:'THE TEMPEST',color:'#26408d',key:'tempest',date:'april 2021',director:'STEVE SPIEL'},{name:"MIDSUMMER NIGHT'S DREAM",color:'#2d5530',key:'midsummer',date:'may 2021',director:'SAM BECK'},{name:'KING LEAR',color:'#D31F39',key:'lear',date:'march 2021',director:'WILL SHAKE'}];
@@ -511,9 +512,9 @@ function menuItem(cNode){
   }
   d3.selectAll('.frag').style('pointer-events',pEvents);
   d3.selectAll('.selected').classed('selected',false);
-  d3.selectAll('.box').style('opacity',0);
+  d3.selectAll('.box').style('opacity',0).style('pointer-events','none');
   cNode.classed('selected',newVal);
-  d3.select('#'+cNode.html()+'box').style('opacity',see);
+  d3.select('#'+cNode.html()+'box').style('opacity',see).style('pointer-events','all');
   disperse(newVal);
 }
 function merchItem(){
@@ -601,6 +602,57 @@ function timedStart(mil){
 d3.selectAll('.menu-item').on('click',function(event){
   menuItem(d3.select(d3.event.currentTarget));
 });
+
+d3.selectAll('.tickdate').on('click',function(event){
+  d3.selectAll('.tickdate').classed('pickdate',false)
+  var item=d3.event.currentTarget
+  d3.select(item).classed('pickdate',true)
+})
+
+
+document.querySelector('#ticketsbox input').addEventListener('input',function(event){
+  yourName=event.currentTarget.value;
+})
+
+d3.select('.confirm').on('click',function(event){
+  if(yourName!==''&&document.querySelectorAll('.pickdate').length>0){
+    d3.select('.confirm').style('opacity',0)
+    updateTicket();
+  }
+})
+
+function updateTicket(){
+    var impick=Math.round(1+Math.random()*4)
+    var participant=Math.round(1+Math.random()*29)
+    d3.select('#tixnum').html(participant)
+    d3.select('.tiximage').selectAll('img').attr('src','assets/frag'+impick+'.png').attr('class','im'+impick)
+    d3.select('#tixdate').html(d3.select('.pickdate').html());
+    d3.select('#tixname').html(yourName);
+    d3.select('#ticketsbox').select('a').style('opacity',1)
+    downloadTicket();
+}
+
+var mobmatch=window.matchMedia('(hover:none)').matches;
+if(mobmatch){
+  theatre[1].name='MIDSUMMER';
+}
+
+function downloadTicket(){
+  document.querySelectorAll('canvas').forEach((item, i) => {
+    item.parentNode.removeChild(item);
+  });
+  // d3.select('#offscreen').selectAll('canvas').remove();
+  var canv;
+  html2canvas(document.querySelector('#print'),{scrollX: 0,scrollY:-window.scrollY}).then(function(canvas){
+      // document.querySelector('#offscreen').appendChild(canvas);
+      // canv=document.querySelector('canvas')
+      var imdata= canvas.toDataURL("image/png");
+      var newData = imdata.replace(/^data:image\/png/, "data:application/octet-stream");
+      d3.select('#download').attr("download", "testimg.png").attr("href",newData);
+  });
+
+}
+// window.addEventListener('load',downloadTicket)
 
 startUp();
 window.addEventListener("scroll",function(event){scrolling(event)});

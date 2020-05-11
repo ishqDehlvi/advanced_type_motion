@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+      #print{
+        background-color:#D31F39;
+        width:300px;
+        height:600px;
+        margin-bottom:10px;
+        position:relative;
+        overflow:hidden;
+      }
+      #topband{
+        background-color:white;
+        width:100%;
+        height:110px;
+        position:relative;
+        overflow:hidden;
+      }
+      #barcode{
+        width:90%;
+        height:90px;
+        margin-top:20px;
+        background-image:url('assets/barcode.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-left:5%;
+        background-color:white;
+      }
+      #centerband{
+        position:relative;
+        overflow:hidden;
+        height:50%;
+        width:100%;
+        height:300px;
+      }
+      #centerband span{
+        color:white;
+        font-family: 'Krona One', serif;
+        font-size:45px;
+        white-space:nowrap;
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+      }
+      .tiximage{
+        position:absolute;
+        width:270px;
+        height:270px;
+        top:15px;
+        left:15px;
+        overflow:hidden;
+      }
+      .tiximage img{
+        position:absolute;
+        display:none;
+      }
+      .im1{
+        width:300px;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        transform-origin:50% 50%;
+      }
+      .im2{
+        width:700px;
+        left:50px;
+        bottom:100px;
+        transform:rotate(30deg);
+        transform-origin:0% 100%;
+      }
+      .im3{
+        height:800px;
+        transform:rotate(50deg);
+        transform-origin:100% 50%;
+        bottom:-250px;
+        right:120px;
+
+      }
+      .im4{
+        transform:rotate(-30deg);
+        transform-origin:100% 50%;
+        height:350px;
+        left:-70px;
+
+      }
+      .im5{
+        height:500px;
+        top:-50px;
+        left:-100px;
+        display:block !important;
+      }
+      #bottomband{
+        width:100%;
+        box-sizing:border-box;
+        font-family: 'Space Mono', monospace;
+        font-size: 18px;
+        color:white;
+        padding-left:22px;
+        padding-right:22px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <a id='download'>downloaaaaaaad</a><br>
+    <!-- <img src='assets/barcode.svg'> -->
+
+    <div id='print'>
+      <div id='topband'>
+        <div id='barcode'></div>
+      </div>
+      <div id='centerband'>
+        <span>the secret</span>
+        <div class='tiximage'>
+          <img class='im1' src='assets/frag1.png'>
+          <img class='im2' src='assets/frag2.png'>
+          <img class='im3' src='assets/frag3.png'>
+          <img class='im4' src='assets/frag4.png'>
+          <img class='im5' src='assets/frag5.png'>
+        </div>
+      </div>
+      <div id='bottomband'>
+        participant #<span id='tixnum'>23</span><br>
+        <span id='tixname'>william mosely</span>
+        <br><br>
+        <span id='tixdate'>3.23.21 23:00</span><br>
+        150 1st Avenue
+      </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/html2canvas.js"></script>
+    <script type="text/javascript">
+      var canv;
+      html2canvas(document.querySelector('#print'),{scrollX: 0,scrollY:-window.scrollY}).then(function(canvas){
+          document.body.appendChild(canvas);
+          canv=document.querySelector('canvas')
+          var imdata= canv.toDataURL("image/png");
+          var newData = imdata.replace(/^data:image\/png/, "data:application/octet-stream");
+          $("#download").attr("download", "testimg.png").attr("href",newData);
+      });
+      document.querySelector('#print').addEventListener('click',function(){
+        html2canvas(document.querySelector('#print')).then(function(canvas){
+            document.body.appendChild(canvas);
+            canv=document.querySelector('canvas')
+            var imdata= canv.toDataURL("image/png");
+            var newData = imdata.replace(/^data:image\/png/, "data:application/octet-stream");
+            $("#download").attr("download", "testimg.png").attr("href",newData);
+        });
+      })
+    </script>
+
+  </body>
+
+</html>

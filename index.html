@@ -28,7 +28,17 @@
       <div class='box cap' id='infobox'>
         Introducing <span class='krona'>the secret:</span> <br>An exclusive, immersive 1 hour theatre experience performing three times each month to max audiences of 30 people per show. After each month the performance is completely changed, with a new production, cast, venue, and set.
       </div>
-      <div class='box' id='ticketsbox'></div>
+      <div class='box cap' id='ticketsbox'>
+        <br>
+        <br>
+        Pick a date/time
+        <span class='tickdate'>3.12.21 23:00</span>
+        <span class='tickdate'>3.19.21 23:00</span>
+        <span class='tickdate'>3.26.21 23:00</span>
+        Name: <input class='tickname cap' type='text' >
+        <span class='confirm'>confirm options</span>
+        <a id='download'>generate ticket!</a> ($10 monopoly bucks)
+      </div>
       <div class='box' id='merchbox'>
       </div>
     </div>
@@ -39,9 +49,33 @@
       <span class='menu-item merch'>merch</span>
     </div>
     <div id='progbar' class='progtext starting'><span class='timelabel'>scroll to begin<br>or autopilot in<span class='countdown'> 3</span><span></div>
+
+    <!-- ticket stuff -->
+    <div id='offscreen'>
+      <div id='print'>
+        <div id='topband'>
+          <div id='barcode'></div>
+        </div>
+        <div id='centerband'>
+          <span>the secret</span>
+          <div class='tiximage'>
+            <img class='im5' src='assets/frag5.png'>
+          </div>
+        </div>
+        <div id='bottomband'>
+          participant #<span id='tixnum'>23</span><br>
+          <span id='tixname'>william mosely</span>
+          <br><br>
+          <span id='tixdate'>3.23.21 23:00</span><br>
+          150 1st Avenue
+        </div>
+      </div>
+    </div>
+    <script src="js/html2canvas.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
+    <script src="js/html2canvas.min.js"></script>
     <script src="js/function.js"></script>
   </body>
 </html>

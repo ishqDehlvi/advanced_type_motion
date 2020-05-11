@@ -202,6 +202,9 @@ function eventControl(event){
   var completed;
   var passed;
   var container=d3.select('#contain');
+  if(!(window.matchMedia('hover').matches)&&Math.abs(scrollV-prevS)>8){
+    timedStart(mil)
+  }
 
   if(adjustH==true){
     var prevH=container.node().getBoundingClientRect().y;
